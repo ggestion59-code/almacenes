@@ -1,0 +1,58 @@
+========================================================================
+ PORTAL AQU ANQA — SINCRONIZACIÓN EN TIEMPO REAL (Netlify)
+========================================================================
+
+Este paquete convierte el portal en multi-usuario: cuando ALMACEN
+(administrador) importa los Excel, los demás usuarios (PAGRICOLA) ven
+los datos actualizados automáticamente (se refresca cada ~15 segundos),
+desde cualquier dispositivo.
+
+CONTENIDO
+  - index.html ................. el portal (página principal)
+  - netlify/functions/data.mjs . la función que guarda/lee los datos
+  - netlify.toml ............... configuración de Netlify
+  - package.json / node_modules  dependencia (@netlify/blobs)
+
+------------------------------------------------------------------------
+ CÓMO DESPLEGARLO (elige UNA opción)
+------------------------------------------------------------------------
+
+OPCIÓN A — Arrastrar la carpeta (lo más rápido)
+  1. Entra a https://app.netlify.com  (tu cuenta).
+  2. "Add new site" -> "Deploy manually".
+  3. Arrastra ESTA CARPETA COMPLETA (no solo el index.html) a la zona
+     de "Drag and drop".  * Debe incluir la subcarpeta netlify/ y node_modules/.
+  4. Espera a que termine el deploy.
+
+OPCIÓN B — Desde GitHub (recomendado para actualizar fácil después)
+  1. Sube esta carpeta a un repositorio de GitHub.
+  2. En Netlify: "Add new site" -> "Import from Git" -> elige el repo.
+  3. Deja "Publish directory" = .  y despliega.
+
+------------------------------------------------------------------------
+ PASO OBLIGATORIO — Definir el TOKEN de publicación (clave secreta)
+------------------------------------------------------------------------
+  1. En tu sitio de Netlify: Site configuration -> Environment variables.
+  2. Crea una variable:
+        Key:    SYNC_TOKEN
+        Value:  (elige una clave secreta, ej: AQUANQA-2026-xY7k)
+  3. Guarda y vuelve a desplegar (Deploys -> Trigger deploy) para que
+     tome la variable.
+
+  * Esta clave es la que el usuario ALMACEN escribirá UNA vez al importar,
+    para autorizar la publicación. Sin esa clave nadie puede modificar los
+    datos (los demás solo leen). No la compartas con usuarios de campo.
+
+------------------------------------------------------------------------
+ CÓMO SE USA
+------------------------------------------------------------------------
+  - ALMACEN entra, importa los 3 Excel (AQ1/AQ2/AQII). La primera vez le
+    pedirá el "Token de sincronización": escribe el mismo valor de
+    SYNC_TOKEN. Verás "☁️ Publicado".
+  - PAGRICOLA (u otros) entran desde cualquier dispositivo y verán los
+    datos y la fecha/hora de última actualización, refrescándose solos.
+
+  Nota: si abres el index.html localmente (doble clic, sin Netlify), el
+  portal funciona igual pero SIN sincronización (guarda solo en ese
+  navegador). La sincronización solo opera cuando está servido en Netlify.
+========================================================================
